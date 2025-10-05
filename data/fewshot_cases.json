@@ -1,0 +1,60 @@
+[
+  {
+    "case_id": "USECASE_1",
+    "input": {
+      "product_1": "Make-up preparations (Class 3, Code 030033)",
+      "product_2": "Tissues of paper for removing make-up (Class 16, Code 160294)",
+      "class_info": {
+        "class_3": "Non-medicated toiletry preparations and cleaning products.",
+        "class_16": "Mainly paper, cardboard and goods made from these materials."
+      }
+    },
+    "reasoning": {
+      "nature": "Make-up preparations are chemical/beauty compositions, while tissues are paper products. Their physical nature is different.",
+      "intended_purpose": "Both are used in the make-up process: one for applying make-up, the other for removing it. Thus, they share the same general purpose."
+    },
+    "output": {
+      "nature_score": 0,
+      "purpose_score": 3,
+      "overall_similarity": 2
+    }
+  },
+  {
+    "case_id": "USECASE_2",
+    "input": {
+      "product_1": "Electronic key fobs being remote control apparatus (Class 9, Code 090781)",
+      "product_2": "Electrical and power test and measurement equipment (Class 9, e.g. Galvanometers, Code 090092)",
+      "class_info": {
+        "class_9": "Scientific and research equipment, audiovisual and IT equipment, safety and security apparatus."
+      }
+    },
+    "reasoning": {
+      "nature": "Both are electronic devices: one is a remote control apparatus, the other is a measurement device. Their general nature overlaps as electronic apparatus.",
+      "intended_purpose": "Key fobs are mainly for security/safety, measurement equipment is for testing electricity and power, but both can serve safety functions."
+    },
+    "output": {
+      "nature_score": 3,
+      "purpose_score": 3,
+      "overall_similarity": 3
+    }
+  },
+  {
+    "case_id": "USECASE_3",
+    "input": {
+      "product_1": "Machines and machine tools for the manufacturing and processing of micro-structure elements (Class 7)",
+      "product_2": "Metal cutting machines (Class 7, Code 070123)",
+      "class_info": {
+        "class_7": "Mainly machines and machine tools; engines and motors."
+      }
+    },
+    "reasoning": {
+      "nature": "Both are machines, with similar physical characteristics as industrial tools.",
+      "intended_purpose": "One is for micro-structure element processing, the other for cutting metal. Their purposes overlap in manufacturing/processing activities, possibly with one being a subset of the other."
+    },
+    "output": {
+      "nature_score": 3,
+      "purpose_score": 3,
+      "overall_similarity": 3
+    }
+  }
+]
