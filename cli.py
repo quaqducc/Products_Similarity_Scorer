@@ -11,6 +11,8 @@ def cmd_run(args: argparse.Namespace) -> int:
 	result = run_similarity(
 		product_1=args.p1,
 		product_2=args.p2,
+		class_1=args.class1,
+		class_2=args.class2,
 		max_fewshot=args.max_fewshot,
 		top_k=args.top_k,
 		model_name=args.model,
@@ -36,6 +38,8 @@ def build_parser() -> argparse.ArgumentParser:
 	run_p = sub.add_parser("run", help="Run similarity for two product descriptions")
 	run_p.add_argument("--p1", required=True, help="Product 1 description")
 	run_p.add_argument("--p2", required=True, help="Product 2 description")
+	run_p.add_argument("--class1", default=None, help="NICE class number for product 1 (optional)")
+	run_p.add_argument("--class2", default=None, help="NICE class number for product 2 (optional)")
 	run_p.add_argument("--max-fewshot", type=int, default=2)
 	run_p.add_argument("--top-k", type=int, default=3)
 	run_p.add_argument("--model", default=None, help="HF model id (e.g. google/flan-t5-base)")

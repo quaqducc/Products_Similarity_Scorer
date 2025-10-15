@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from typing import List
+from typing import List, Optional, Iterable
 
 
 PACKAGE_DIR = os.path.dirname(__file__)
@@ -67,4 +67,42 @@ def retrieve_contexts(product_1: str, product_2: str, top_k: int = 3) -> List[st
 	scored.sort(key=lambda x: x[0], reverse=True)
 	return [ctx for _, ctx in scored[:top_k]]
 
+
+
+def _find_class_entry(class_number: str) -> Optional[dict]:
+	"""
+	Return NICE entry dict for a given class number (string match).
+	"""
+	for entry in _get_nice_chunks_cached():
+		if str(entry.get("class_number", "")).strip() == str(class_number).strip():
+			return entry
+	return None
+
+
+def contexts_from_class_numbers(class_numbers: Iterable[object], max_items_per_class: int = 3) -> List[str]:
+	"""
+	Build context strings directly from provided NICE class numbers, bypassing keyword retrieval.
+	"""
+	seen = set()
+	contexts: List[str] = []
+	for cn in class_numbers:
+		if cn is None:
+			continue
+		cn_str = str(cn).strip()
+		if not cn_str or cn_str in seen:
+			continue
+		seen.add(cn_str)
+		entry = _find_class_entry(cn_str)
+		if not entry:
+			continue
+		heading = entry.get("heading", "")
+		items = entry.get("items", [])
+		class_no = entry.get("class_number", cn_str)
+		matched_items = [it.get("Goods and Service", "") for it in items][:max_items_per_class]
+		snippet_items = "; ".join([s for s in matched_items if s])
+		context = f"Class {class_no}: {heading}"
+		if snippet_items:
+			context += f"\nExamples: {snippet_items}"
+		contexts.append(context)
+	return contexts
 

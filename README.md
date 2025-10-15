@@ -46,10 +46,12 @@ Kết quả sẽ ghi vào `data/nice_chunks.json`.
 
 Chạy pipeline qua CLI. Có thể chọn chạy không mô hình (chỉ build prompt + retriever) hoặc chạy với mô hình HF cục bộ.
 
-- Không chạy mô hình (chỉ xem prompt và context, `scores` rỗng):
+- Không chạy mô hình (chỉ xem prompt và context, `scores` rỗng). Nếu đã biết class số của hai sản phẩm, thêm `--class1`, `--class2` để lấy context trực tiếp theo class (bỏ qua truy xuất từ khóa):
 
 ```bash
 python cli.py run --p1 "Make-up preparations" --p2 "Tissues of paper for removing make-up"
+# hoặc (biết sẵn class):
+python cli.py run --p1 "Make-up preparations" --p2 "Tissues of paper for removing make-up" --class1 3 --class2 16
 ```
 
 - Chạy với mô hình HF (ví dụ `google/flan-t5-base`):
@@ -64,6 +66,7 @@ Tham số chính:
 - `--top-k`: số context NICE lấy từ retriever (mặc định 3)
 - `--model`: id mô hình HF (bỏ trống để không chạy mô hình)
 - `--device`: -1 dùng CPU, 0 dùng GPU
+- `--class1`, `--class2`: số class NICE tương ứng cho p1, p2; nếu truyền thì sẽ trích context trực tiếp từ class đó.
 
 CLI sẽ in JSON gồm `contexts`, `prompt`, `output_text`, và `scores` (nếu có mô hình).
 
@@ -73,14 +76,16 @@ CLI sẽ in JSON gồm `contexts`, `prompt`, `output_text`, và `scores` (nếu 
 from product_similarity import run_similarity
 
 res = run_similarity(
-    "Chemicals for industrial use",
-    "chemical additives for detergents",
+    "Make-up preparations",
+    "Tissues of paper for removing make-up",
+    class_1=3,
+    class_2=16,
     model_name=None,  # hoặc 'google/flan-t5-base'
 )
 print(res["scores"])
 ```
 
 ## Ghi chú
-- Bộ retriever hiện tại dựa trên keyword đơn giản, có thể thay thế bằng BM25/embeddings.
+- Khi có `class_1`, `class_2`, hệ thống sẽ dùng trực tiếp dữ liệu theo class và bỏ qua keyword retrieval.
 - Khi chạy mô hình cục bộ lần đầu, Transformers sẽ tải model/tokenizer từ HuggingFace Hub.
 - Nếu máy yếu, cân nhắc để `model_name=None` và chỉ xuất prompt.
