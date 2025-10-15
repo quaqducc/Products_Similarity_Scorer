@@ -70,19 +70,19 @@ def run_similarity(
 	prompt = build_prompt(fewshot_cases, product_1, product_2, contexts, max_fewshot=max_fewshot)
 
 	output_text = ""
-    if chat_api_base_url and chat_api_key and chat_api_model:
-        try:
-            from .model import ChatAPIWrapper
-            chat = ChatAPIWrapper(
+	if chat_api_base_url and chat_api_key and chat_api_model:
+		try:
+			from .model import ChatAPIWrapper
+			chat = ChatAPIWrapper(
                 base_url=str(chat_api_base_url),
                 api_key=str(chat_api_key),
                 model=str(chat_api_model),
                 max_tokens=max_new_tokens,
             )
-            output_text = chat.run(prompt, temperature=max(temperature, 0.0), top_p=top_p)
-        except Exception:
-            output_text = ""
-    elif model_name:
+			output_text = chat.run(prompt, temperature=max(temperature, 0.0), top_p=top_p)
+		except Exception:
+			output_text = ""
+	elif model_name:
 		try:
 			from .model import LLMWrapper
 			llm = LLMWrapper(model_name=model_name, device=device, max_new_tokens=max_new_tokens)
