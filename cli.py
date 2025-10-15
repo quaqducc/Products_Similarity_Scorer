@@ -16,6 +16,9 @@ def cmd_run(args: argparse.Namespace) -> int:
 		max_fewshot=args.max_fewshot,
 		top_k=args.top_k,
 		model_name=args.model,
+		chat_api_base_url=args.chat_api_base_url,
+		chat_api_key=args.chat_api_key,
+		chat_api_model=args.chat_api_model,
 		device=args.device,
 		max_new_tokens=args.max_new_tokens,
 		temperature=args.temperature,
@@ -43,6 +46,9 @@ def build_parser() -> argparse.ArgumentParser:
 	run_p.add_argument("--max-fewshot", type=int, default=2)
 	run_p.add_argument("--top-k", type=int, default=3)
 	run_p.add_argument("--model", default=None, help="HF model id (e.g. google/flan-t5-base)")
+	run_p.add_argument("--chat-api-base-url", default=None, help="OpenAI-compatible chat API base URL")
+	run_p.add_argument("--chat-api-key", default=None, help="OpenAI-compatible chat API key")
+	run_p.add_argument("--chat-api-model", default=None, help="OpenAI-compatible chat API model id")
 	run_p.add_argument("--device", type=int, default=-1, help="-1 CPU, 0 GPU")
 	run_p.add_argument("--max-new-tokens", type=int, default=256)
 	run_p.add_argument("--temperature", type=float, default=0.0)
