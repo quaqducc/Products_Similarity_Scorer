@@ -42,7 +42,7 @@ def build_prompt(
 	instruction = (
 		"You are an expert in trademark law and NICE classification.\n"
 		"Your task is to evaluate the similarity between two products "
-		"according to the official NICE classification and the 8 guideline factors: Nature, Intended Purpose and Channels of Trade(optionally)\n\n"
+		"according to the official NICE classification and guideline factors: Nature, Intended Purpose and Channels of Trade(optionally)\n\n"
 		"Scoring system (for each factor and overall):\n"
 		"0 = Not similar, 1 = Slightly similar, 2 = Somewhat similar, "
 		"3 = Similar, 4 = Highly similar.\n\n"
