@@ -111,7 +111,7 @@ def build_prompt(
 		"- Factor 3 Score: (Optionally) [0–4]\n"
 		"- Overall Similarity Score: [0–4]\n"
   
-		"Your final answer should end with a conclusion as format of Overall Similarity Score: [0–4]\n"
+		"Your final answer must end with a conclusion of Overall Similarity Score: [0–4]\n"
 	)
 
 	# Final combined prompt
