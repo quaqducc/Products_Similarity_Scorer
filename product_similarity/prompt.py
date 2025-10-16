@@ -74,6 +74,8 @@ def build_prompt(
 		"2 = Somewhat similar\n"
 		"3 = Similar\n"
 		"4 = Highly similar\n"
+  
+		"Give the answer within 4000 words\n"
 	)
 
 	# Format few-shot examples (optionally limit the number used)
