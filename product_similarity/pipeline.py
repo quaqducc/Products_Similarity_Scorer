@@ -29,7 +29,7 @@ def parse_scores(output: str) -> Dict[str, Optional[int]]:
 	patterns = {
 		"nature": r"Nature\s*Score:\s*(\d)",
 		"purpose": r"Purpose\s*Score:\s*(\d)",
-		"overall": r"Overall\s*(?:Similarity|Score):\s*(\d)",
+		"overall": r"Overall(?:\s+Similarity)?(?:\s+Score)?\s*[:\-]\s*(\d)",
 	}
 
 	for key, pat in patterns.items():
