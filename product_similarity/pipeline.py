@@ -45,7 +45,7 @@ def run_similarity(
     *,
     class_1: Optional[object] = None,
     class_2: Optional[object] = None,
-    max_fewshot: int = 2,
+    max_fewshot: int = 5,
     top_k: int = 3,
     model_name: Optional[str] = None,
     # Chat API (OpenAI-compatible) options:

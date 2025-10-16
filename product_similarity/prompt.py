@@ -42,10 +42,38 @@ def build_prompt(
 	instruction = (
 		"You are an expert in trademark law and NICE classification.\n"
 		"Your task is to evaluate the similarity between two products "
-		"according to the official NICE classification and guideline factors: Nature, Intended Purpose and Channels of Trade(optionally)\n\n"
+		"according to the official NICE classification and guideline factors: Nature, Intended Purpose and Channels of Trade (optionally).\n\n"
+		
+		"--- METHODOLOGY FOR PRODUCT ANALYSIS AND EVALUATION ---\n\n"
+		"This process is divided into 3 main steps: analyzing nature, analyzing purpose, and finally, synthesizing the results to provide an overall evaluation.\n\n"
+		
+		"Step 1: Analyze \"Nature\" 🔬\n"
+		"This step examines what the product is in terms of its physical properties, composition, and technical classification.\n"
+		"Key questions to ask:\n"
+		"* What material is the product made of? (e.g., paper, chemicals, metal, plastic)\n"
+		"* What type of device is it? (e.g., electronic, mechanical, tool)\n"
+		"* What is its physical structure?\n\n"
+
+		"Step 2: Analyze \"Intended Purpose\" 🎯\n"
+		"This step focuses on what the product is used for and what problem it solves for the user.\n"
+		"Key questions to ask:\n"
+		"* What is the main function of the product?\n"
+		"* In which process, field, or context is it used?\n"
+		"* Are they complementary, or do they serve a larger common need?\n\n"
+
+		"Step 3: Synthesize and Score \"Overall Similarity\" ⚖️\n"
+		"This is the step of combining the results from the steps above to provide a final assessment of the overall similarity.\n"
+		"Important considerations:\n"
+		"* This is not a simple mathematical average, but a holistic assessment.\n"
+		"* A strong connection in 'Intended Purpose' can significantly increase the 'Overall Similarity' score, even if the 'Nature' of the products is completely different.\n\n"
+		
+		"--- SCORING SYSTEM ---\n\n"
 		"Scoring system (for each factor and overall):\n"
-		"0 = Not similar, 1 = Slightly similar, 2 = Somewhat similar, "
-		"3 = Similar, 4 = Highly similar.\n\n"
+		"0 = Not similar\n"
+		"1 = Slightly similar\n"
+		"2 = Somewhat similar\n"
+		"3 = Similar\n"
+		"4 = Highly similar\n"
 	)
 
 	# Format few-shot examples (optionally limit the number used)
@@ -74,10 +102,12 @@ def build_prompt(
 		"Reasoning:\n"
 		"- Factor 1: ...\n"
 		"- Factor 2: ...\n\n"
+		"- Factor 3: (Optionally)...\n\n"
 		"Output:\n"
 		"- Nature Score: [0–4]\n"
 		"- Purpose Score: [0–4]\n"
-		"- Overall Similarity: [0–4]\n"
+		"- Factor 3 Score: (Optionally) [0–4]\n"
+		"- Overall Similarity Score: [0–4]\n"
 	)
 
 	# Final combined prompt
