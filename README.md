@@ -11,7 +11,9 @@ Dự án refactor từ `Project 3` để đánh giá độ tương đồng hàng
   │   ├─ prompt.py
   │   ├─ retriever.py
   │   ├─ model.py
-  │   └─ pipeline.py
+  │   ├─ pipeline.py
+  │   ├─ agents.py           # Multi-agent theo tiêu chí (Nature, Purpose, ...)
+  │   └─ judge.py            # Judge gộp điểm các tiêu chí
   ├─ tools/
   │   └─ merge_nice_cls.py
   ├─ data/
@@ -19,6 +21,7 @@ Dự án refactor từ `Project 3` để đánh giá độ tương đồng hàng
   │   └─ nice_chunks.json  # sinh từ data_nice_cls
   ├─ data_nice_cls/
   │   └─ group_*.json
+  ├─ eval.py                 # Orchestrator Analyzer -> Agents -> Judge + metrics
   ├─ requirements.txt
   └─ cli.py
 ```
@@ -69,6 +72,33 @@ Tham số chính:
 - `--class1`, `--class2`: số class NICE tương ứng cho p1, p2; nếu truyền thì sẽ trích context trực tiếp từ class đó.
 
 CLI sẽ in JSON gồm `contexts`, `prompt`, `output_text`, và `scores` (nếu có mô hình).
+
+## Multi-agent + Judge (mới)
+
+Chúng tôi bổ sung mô-đun đa agent theo từng tiêu chí và Judge để gộp điểm:
+
+- `product_similarity/agents.py`: lớp `FactorAgent` chạy từng tiêu chí (Nature, Intended Purpose, Channel of trade, ...), mỗi agent có thể dùng model riêng (mặc định `mistralai/Mistral-7B-Instruct-v0.2`).
+- `product_similarity/judge.py`: lớp `LLMJudge` gộp điểm theo trọng số và xuất `overall_similarity`.
+- `eval.py`: chạy Analyzer (giữ nguyên prompt từ `product_similarity`), rồi gọi các agent và Judge, tính đơn giản Exact Match với nhãn vàng trong CSV.
+
+Cách chạy:
+
+```bash
+python eval.py --csv data/100_samples.csv \
+  --analyzer-model "google/flan-t5-base" \
+  --agent-model "mistralai/Mistral-7B-Instruct-v0.2" \
+  --device -1 --max-new-tokens 256
+
+# Hoặc dùng Chat API (OpenAI-compatible, ví dụ NVIDIA):
+python eval.py --csv data/100_samples.csv \
+  --chat-api-base-url "https://integrate.api.nvidia.com/v1" \
+  --chat-api-key "$YOUR_KEY" \
+  --chat-api-model "meta/llama-3.1-8b-instruct"
+```
+
+Kết quả xuất gồm `metrics` (ví dụ `exact_match`) và `results` chi tiết cho từng hàng.
+
+Xem hướng dẫn notebook Kaggle: `examples/KAGGLE_GUIDE.md`.
 
 ## Sử dụng như thư viện
 
