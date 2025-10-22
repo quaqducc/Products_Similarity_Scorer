@@ -82,9 +82,7 @@ class ChatAPIWrapper:
 		extra_body: Optional[Dict[str, Any]] = None,
 	) -> str:
 		messages = [{"role": "user", "content": prompt}]
-		# NVIDIA-specific default thinking tokens if not provided
-		if extra_body is None and isinstance(self._base_url, str) and "integrate.api.nvidia.com" in self._base_url:
-			extra_body = {"min_thinking_tokens": 1024, "max_thinking_tokens": 2048}
+
 
 		resp = self._client.chat.completions.create(
 			model=self._model,
