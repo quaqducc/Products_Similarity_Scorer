@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 
 @dataclass
 class JudgeConfig:
-	weights: Dict[str, float] | None = None  # per-factor weights; defaults applied if None
+	weights: Optional[Dict[str, float]] = None  # per-factor weights; defaults applied if None
 
 
 class LLMJudge:

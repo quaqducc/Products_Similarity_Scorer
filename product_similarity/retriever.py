@@ -17,7 +17,7 @@ def _load_nice_chunks() -> list:
 		return json.load(f)
 
 
-_NICE_CHUNKS_CACHE: list | None = None
+_NICE_CHUNKS_CACHE: Optional[list] = None
 
 
 def _get_nice_chunks_cached() -> list:
