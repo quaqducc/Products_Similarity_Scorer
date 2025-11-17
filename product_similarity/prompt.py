@@ -55,6 +55,7 @@ def build_prompt(
         "  • What is each product used for?\n"
         "  • Do they serve the same user need or are they complementary?\n\n"
         "Step 3. Combine your findings and give an OVERALL SIMILARITY score.\n"
+        "  • If you found some score for optional factors, give it the same weight with nature and intended purpose.\n"
         "  • Consider the strength of overlap in purpose and nature.\n"
         "  • If Intended Purpose is strongly similar, it can raise the Overall score even if Nature differs.\n\n"
 
