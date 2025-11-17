@@ -5,6 +5,7 @@ from typing import Dict, Optional
 
 from .prompt import build_prompt
 from .retriever import retrieve_contexts, contexts_from_class_numbers, DATA_DIR
+from .spsc import retrieve_spsc_contexts
 
 
 FEWSHOT_PATH = os.path.join(DATA_DIR, "fewshot_cases.json")
@@ -47,6 +48,8 @@ def run_similarity(
     class_2: Optional[object] = None,
     max_fewshot: int = 5,
     top_k: int = 3,
+    include_spsc: bool = True,
+    spsc_top_k: int = 2,
     model_name: Optional[str] = None,
     # Chat API (OpenAI-compatible) options:
     chat_api_base_url: Optional[str] = None,
@@ -67,6 +70,17 @@ def run_similarity(
 		contexts = contexts_from_class_numbers([class_1, class_2])
 	else:
 		contexts = retrieve_contexts(product_1, product_2, top_k=top_k)
+
+	# Optionally augment with SPSC contexts inferred from product texts
+	if include_spsc:
+		try:
+			spsc_ctx = retrieve_spsc_contexts(product_1, product_2, top_k=spsc_top_k)
+			if spsc_ctx:
+				contexts = contexts + spsc_ctx
+		except Exception:
+			# Silently ignore SPSC retrieval errors to keep pipeline robust
+			pass
+
 	prompt = build_prompt(fewshot_cases, product_1, product_2, contexts, max_fewshot=max_fewshot)
 
 	output_text = ""

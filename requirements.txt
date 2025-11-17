@@ -4,3 +4,6 @@ sentencepiece>=0.1.99
 accelerate>=0.33.0
 
 
+## For Excel processing and DataFrames
+pandas>=2.2.0
+openpyxl>=3.1.2

@@ -7,6 +7,7 @@ from product_similarity.pipeline import _load_fewshot_cases, build_prompt, retri
 from product_similarity.model import ChatAPIWrapper, LLMWrapper
 from product_similarity.agents import FactorAgent, FactorAgentConfig, evaluate_multiple_factors
 from product_similarity.judge import LLMJudge, JudgeConfig
+from product_similarity.spsc import retrieve_spsc_contexts
 
 
 DEFAULT_ANALYZER_MODEL = None  # None => only build prompt; override with HF id or chat API via CLI
@@ -71,7 +72,9 @@ def evaluate_dataset(csv_path: str, *,
                      chat_api_key: Optional[str] = None,
                      chat_api_model: Optional[str] = None,
                      device: int = -1,
-                     max_new_tokens: int = 256) -> Dict[str, object]:
+                     max_new_tokens: int = 256,
+                     include_spsc: bool = True,
+                     spsc_top_k: int = 2) -> Dict[str, object]:
     rows: List[Dict[str, str]] = []
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -94,6 +97,13 @@ def evaluate_dataset(csv_path: str, *,
             gold = None
 
         contexts = retrieve_contexts(p1, p2, top_k=3)
+        if include_spsc:
+            try:
+                spsc_ctx = retrieve_spsc_contexts(p1, p2, top_k=spsc_top_k)
+                if spsc_ctx:
+                    contexts = contexts + spsc_ctx
+            except Exception:
+                pass
         analyzer_text = run_analyzer(
             p1,
             p2,
@@ -151,6 +161,8 @@ def main() -> int:
     parser.add_argument("--agent-model", default="mistralai/Mistral-7B-Instruct-v0.2", help="HF model id for factor agents")
     parser.add_argument("--device", type=int, default=-1)
     parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument("--no-spsc", action="store_true", help="Disable adding SPSC context")
+    parser.add_argument("--spsc-top-k", type=int, default=2)
     parser.add_argument("--chat-api-base-url", default=None)
     parser.add_argument("--chat-api-key", default=None)
     parser.add_argument("--chat-api-model", default=None)
@@ -165,6 +177,8 @@ def main() -> int:
         chat_api_model=args.chat_api_model,
         device=args.device,
         max_new_tokens=args.max_new_tokens,
+        include_spsc=(not args.no_spsc),
+        spsc_top_k=args.spsc_top_k,
     )
     print(json.dumps(out, ensure_ascii=False, indent=2))
     return 0
