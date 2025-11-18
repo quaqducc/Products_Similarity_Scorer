@@ -58,10 +58,10 @@ def cmd_build_tree(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-	parser = argparse.ArgumentParser(description="Product Similarity CLI")
+	parser = argparse.ArgumentParser(description="Nature Predict CLI (Nature factor similarity)")
 	sub = parser.add_subparsers(dest="command", required=True)
 
-	run_p = sub.add_parser("run", help="Run similarity for two product descriptions")
+	run_p = sub.add_parser("run", help="Run Nature similarity (Nature factor) for two product descriptions")
 	run_p.add_argument("--p1", required=True, help="Product 1 description")
 	run_p.add_argument("--p2", required=True, help="Product 2 description")
 	run_p.add_argument("--class1", default=None, help="NICE class number for product 1 (optional)")

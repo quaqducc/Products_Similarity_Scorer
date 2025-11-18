@@ -1,19 +1,19 @@
-# Product Similarity (NICE Classification)
+# Nature Predict (NICE Classification)
 
-Dự án refactor từ `Project 3` để đánh giá độ tương đồng hàng hóa/dịch vụ theo phân loại NICE. Cấu trúc gọn gàng, có CLI và tài liệu hướng dẫn.
+Dự án tách từ `Product_Similarity`, tập trung cho bài toán dự đoán độ tương đồng theo yếu tố Nature (bản chất/sự vật chất của sản phẩm) dựa trên phân loại NICE. Cấu trúc gọn gàng, có CLI và tài liệu hướng dẫn.
 
 ## Cấu trúc thư mục
 
 ```
-.Lab/Product_Similarity/
+.Lab/Nature_Predict/
   ├─ product_similarity/
   │   ├─ __init__.py
   │   ├─ prompt.py
   │   ├─ retriever.py
   │   ├─ model.py
   │   ├─ pipeline.py
-  │   ├─ agents.py           # Multi-agent theo tiêu chí (Nature, Purpose, ...)
-  │   └─ judge.py            # Judge gộp điểm các tiêu chí
+  │   ├─ agents.py           # Multi-agent theo tiêu chí (có thể tận dụng nếu cần)
+  │   └─ judge.py            # Giữ lại cho mục đích mở rộng (không dùng Overall ở repo này)
   ├─ tools/
   │   └─ merge_nice_cls.py
   ├─ data/
@@ -47,7 +47,7 @@ Kết quả sẽ ghi vào `data/nice_chunks.json`.
 
 ## Chạy đánh giá tương đồng
 
-Chạy pipeline qua CLI. Có thể chọn chạy không mô hình (chỉ build prompt + retriever) hoặc chạy với mô hình HF cục bộ.
+Chạy pipeline qua CLI. Có thể chọn chạy không mô hình (chỉ build prompt + retriever) hoặc chạy với mô hình HF/Chat API. Kết quả tập trung vào điểm Nature.
 
 - Không chạy mô hình (chỉ xem prompt và context, `scores` rỗng). Nếu đã biết class số của hai sản phẩm, thêm `--class1`, `--class2` để lấy context trực tiếp theo class (bỏ qua truy xuất từ khóa):
 
@@ -71,15 +71,15 @@ Tham số chính:
 - `--device`: -1 dùng CPU, 0 dùng GPU
 - `--class1`, `--class2`: số class NICE tương ứng cho p1, p2; nếu truyền thì sẽ trích context trực tiếp từ class đó.
 
-CLI sẽ in JSON gồm `contexts`, `prompt`, `output_text`, và `scores` (nếu có mô hình).
+CLI sẽ in JSON gồm `contexts`, `prompt`, `output_text`, và `scores` (nếu có mô hình). Trong đó `scores.nature` là điểm Nature (0–4), các trường khác có thể `None`.
 
-## Multi-agent + Judge (mới)
+## Multi-agent + Judge (tùy chọn)
 
-Chúng tôi bổ sung mô-đun đa agent theo từng tiêu chí và Judge để gộp điểm:
+Có sẵn mô-đun đa agent và judge để mở rộng nhiều tiêu chí (Nature, Purpose, ...). Repo này mặc định chỉ dùng Nature.
 
-- `product_similarity/agents.py`: lớp `FactorAgent` chạy từng tiêu chí (Nature, Intended Purpose, Channel of trade, ...), mỗi agent có thể dùng model riêng (mặc định `mistralai/Mistral-7B-Instruct-v0.2`).
-- `product_similarity/judge.py`: lớp `LLMJudge` gộp điểm theo trọng số và xuất `overall_similarity`.
-- `eval.py`: chạy Analyzer (giữ nguyên prompt từ `product_similarity`), rồi gọi các agent và Judge, tính đơn giản Exact Match với nhãn vàng trong CSV.
+- `product_similarity/agents.py`: lớp `FactorAgent` chạy từng tiêu chí (mặc định `mistralai/Mistral-7B-Instruct-v0.2`).
+- `product_similarity/judge.py`: lớp `LLMJudge` (giữ lại cho mục đích mở rộng).
+- `eval.py`: ví dụ orchestrator; có thể điều chỉnh nếu cần đánh giá riêng điểm Nature.
 
 Cách chạy:
 
@@ -112,7 +112,7 @@ res = run_similarity(
     class_2=16,
     model_name=None,  # hoặc 'google/flan-t5-base'
 )
-print(res["scores"])
+print(res["scores"]["nature"])  # điểm Nature 0–4 (các trường khác có thể None)
 ```
 
 ## Ghi chú
